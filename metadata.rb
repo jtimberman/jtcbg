@@ -1,8 +1,7 @@
-name             'code_generator'
-maintainer       'Chef Software, Inc.'
-maintainer_email 'dev@chef.io'
+name             'jtcbg'
+maintainer       'Joshua Timberman'
+maintainer_email 'cookbooks@housepub.org'
 license          'Apache 2 License'
 description      'Generates Chef code for Chef DK'
 long_description 'Generates Chef code for Chef DK'
-version          '0.1.0'
-
+version          '0.2.0'

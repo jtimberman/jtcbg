@@ -1,0 +1,18 @@
+#
+# Cookbook Name:: <%= cookbook_name %>
+# Provider:: <%= new_file_basename %>
+#
+<%= license_description('#') %>
+
+module <%= cookbook_name.split(/[-_]/).map {|e| e.capitalize}.join %>
+  class <%= new_file_basename.split(/[-_]/).map {|e| e.capitalize}.join %> < Chef::Provider::LWRPBase
+    use_inline_resources
+
+    def whyrun_supported?
+      true
+    end
+
+    # action :something do
+    # end
+  end
+end

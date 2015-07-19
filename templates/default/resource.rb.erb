@@ -1,0 +1,16 @@
+#
+# Cookbook Name:: <%= cookbook_name %>
+# Resource:: <%= new_file_basename %>
+#
+<%= license_description('#') %>
+
+module <%= cookbook_name.split(/[-_]/).map {|e| e.capitalize}.join %>
+  class <%= new_file_basename.split(/[-_]/).map {|e| e.capitalize}.join %> < Chef::Resource::LWRPBase
+    resource_name :<%= new_file_basename %>
+
+    actions
+    default_action :nothing
+
+    # attribute :name, kind_of: String, name_attribute: true
+  end
+end

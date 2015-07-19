@@ -17,11 +17,24 @@ template "#{cookbook_dir}/README.md" do
   action :create_if_missing
 end
 
+# LICENSE
+template "#{cookbook_dir}/LICENSE" do
+  source 'LICENSE.apache2.erb'
+  action :create_if_missing
+end
+
 # chefignore
 cookbook_file "#{cookbook_dir}/chefignore"
 
-# Berks
-cookbook_file "#{cookbook_dir}/Berksfile" do
+# PolicyFile
+template "#{cookbook_dir}/Policyfile.rb" do
+  helpers(ChefDK::Generator::TemplateHelper)
+  action :create_if_missing
+end
+
+# Rubocop
+cookbook_file "#{cookbook_dir}/.rubocop.yml" do
+  source 'rubocop.yml'
   action :create_if_missing
 end
 
@@ -29,6 +42,12 @@ end
 template "#{cookbook_dir}/.kitchen.yml" do
   source 'kitchen.yml.erb'
   helpers(ChefDK::Generator::TemplateHelper)
+  action :create_if_missing
+end
+
+remote_directory "#{cookbook_dir}/test/fixtures/cookbooks/test" do
+  source 'test_cookbook'
+  recursive true
   action :create_if_missing
 end
 
@@ -61,7 +80,7 @@ cookbook_file "#{cookbook_dir}/spec/spec_helper.rb" do
 end
 
 template "#{cookbook_dir}/spec/unit/recipes/default_spec.rb" do
-  source "recipe_spec.rb.erb"
+  source 'recipe_spec.rb.erb'
   helpers(ChefDK::Generator::TemplateHelper)
   action :create_if_missing
 end
@@ -71,22 +90,26 @@ end
 directory "#{cookbook_dir}/recipes"
 
 template "#{cookbook_dir}/recipes/default.rb" do
-  source "recipe.rb.erb"
+  source 'recipe.rb.erb'
   helpers(ChefDK::Generator::TemplateHelper)
   action :create_if_missing
 end
 
 # git
 if context.have_git
-  if !context.skip_git_init
+  unless context.skip_git_init
+    execute('initialize-git') do
+      command('git init .')
+      cwd cookbook_dir
+    end
 
-    execute("initialize-git") do
-      command("git init .")
+    execute 'git-remote-add-origin' do
+      command "git remote add origin git@github.com:jtimberman/#{context.cookbook_name}-cookbook"
       cwd cookbook_dir
     end
   end
 
   cookbook_file "#{cookbook_dir}/.gitignore" do
-    source "gitignore"
+    source 'gitignore'
   end
 end
