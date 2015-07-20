@@ -1,17 +1,40 @@
 ---
 driver:
+<% if @windows -%>
+  name: 'hyperv'
+  memory_startup_bytes: 2147483648
+  processor_count: 2
+  vm_generation: 2
+  parent_vhd_folder: 'C:/Users/Public/Documents/Hyper-V/Virtual hard disks'
+  parent_vhd_name: 'windows-8.1-pro.vhdx'
+  vm_switch: 'hyperv-switch'
+
+transport:
+  username: 'test-kitchen'
+  password: 'test-kitchen'
+  connection_retries: 10
+  connection_retry_sleep: 5
+
+verifier:
+  name: 'pester'
+<% else -%>
   name: vagrant
   customize:
     numvcpus: 2
     memsize: 1024
+<% end -%>
 
 provisioner:
   name: policyfile_zero
 
 platforms:
+<% if @windows -%>
+  - name: windows-8.1-pro
+<% else -%>
   - name: ubuntu-14.04
   - name: debian-8.0
   - name: centos-7.1
+<% end -%>
 
 suites:
   - name: default
